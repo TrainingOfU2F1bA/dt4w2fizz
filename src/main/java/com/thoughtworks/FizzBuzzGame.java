@@ -27,7 +27,29 @@ public class FizzBuzzGame {
                 "Whizz", "92", "Fizz", "94", "Buzz", "Fizz", "97", "Whizz", "Fizz", "Buzz", "101",
                 "Fizz", "Fizz", "104", "FizzBuzzWhizz"
         );
-        results=expectedResults.subList(0,count);
+        results = IntStream.rangeClosed(1, count).boxed().map(x -> x.toString()).map(x -> x.indexOf('3') != -1 ? "Fizz" : x).map(x -> {
+            Integer integer = null;
+            if (Pattern.compile("[1-9][0-9]*").matcher(x).matches()) integer = Integer.parseInt(x);
+            if (integer == null) {
+                return x;
+            } else if (integer % 105 == 0) {
+                return "FizzBuzzWhizz";
+            } else if (integer % 35 == 0) {
+                return "BuzzWhizz";
+            } else if (integer % 15 == 0) {
+                return "FizzBuzz";
+            } else if (integer % 21 == 0) {
+                return "FizzWhizz";
+            } else if (integer % 3 == 0) {
+                return "Fizz";
+            } else if (integer % 5 == 0) {
+                return "Buzz";
+            } else if (integer % 7 == 0) {
+                return "Whizz";
+            } else {
+                return x;
+            }
+        }).collect(Collectors.toList());
     }
 
     public List<String> getResults() {
