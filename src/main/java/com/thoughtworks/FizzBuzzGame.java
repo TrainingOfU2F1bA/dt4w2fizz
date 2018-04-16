@@ -1,13 +1,11 @@
 package com.thoughtworks;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 
 public class FizzBuzzGame {
@@ -15,21 +13,27 @@ public class FizzBuzzGame {
 
     public void start(int count) {
         results = IntStream.rangeClosed(1, count).boxed().
-                map(x -> x.toString()).map(x -> x.indexOf('3') != -1 ? "Fizz" : x).
-                map(x ->canBeDivided(x,105)?"FizzBuzzWhizz":x).
-                map(x ->canBeDivided(x,35)?"BuzzWhizz":x).
-                map(x ->canBeDivided(x,15)?"FizzBuzz":x).
-                map(x ->canBeDivided(x,21)?"FizzWhizz":x).
-                map(x ->canBeDivided(x,3)?"Fizz":x).
-                map(x ->canBeDivided(x,5)?"Buzz":x).
-                map(x ->canBeDivided(x,7)?"Whizz":x).collect(Collectors.toList());
+                map(luckyNumberMap("Fizz")).
+                map(map2FizzBuzzWhizz(105, "FizzBuzzWhizz")).
+                map(map2FizzBuzzWhizz(35, "BuzzWhizz")).
+                map(map2FizzBuzzWhizz(15, "FizzBuzz")).
+                map(map2FizzBuzzWhizz(21, "FizzWhizz")).
+                map(map2FizzBuzzWhizz(3, "Fizz")).
+                map(map2FizzBuzzWhizz(5, "Buzz")).
+                map(map2FizzBuzzWhizz(7, "Whizz")).collect(Collectors.toList());
+    }
+
+    private Function<Integer, String> luckyNumberMap(String fizz) {
+        return x -> x.toString().indexOf('3') != -1 ? fizz : x.toString();
+    }
+
+    private Function<String, String> map2FizzBuzzWhizz(int i, String fizzBuzzWhizz) {
+        return x -> canBeDivided(x, i) ? fizzBuzzWhizz : x;
     }
 
     private boolean canBeDivided(String integer, int i) {
-        if (isMatches(integer)) {
-            return Integer.parseInt(integer) % i == 0;
-        }
-        else return false;
+        if (isMatches(integer))  return Integer.parseInt(integer) % i == 0;
+         return false;
     }
 
     private boolean isMatches(String x) {
